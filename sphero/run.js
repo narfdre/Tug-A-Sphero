@@ -3,7 +3,7 @@ process.stdin.setEncoding('utf8');
 var util = require('util')
   , _ = require('lodash')
   , Cylon = require('cylon')
-  , MAX_SPEED = 60
+  , MAX_SPEED = 60 * 2
   , Firebase = require('firebase')
   , rootRef = new Firebase('https://tug-a-sphero.firebaseio.com/ballots/-JDX8SoPDXn2bFk9KiRN')
   , exec = require('child_process').exec;
@@ -15,16 +15,15 @@ function roll(data, sphero){
   var dir, speed,
     redCount = data['eastCount'],
     blueCount = data['westCount'],
-    team = data['changed'];
+    team = data['changed'],
+    color = 'blue';
 
   if(team == "eastCount"){
     dir = 1;
     speed = redCount - blueCount;
-    sphero.setColor('red');
   }else if(team == "westCount"){
     dir = 181;
     speed = blueCount - redCount;
-    sphero.setColor('blue');
   }else{
     console.log("Unknown team ", team);
     return;
@@ -34,6 +33,11 @@ function roll(data, sphero){
     sphero.stop();
     sphero.setColor('green');
   }else{
+
+    color = redCount > blueCount ? 'red' : 'blue'; 
+    dir = redCount > blueCount ? 1 : 181; 
+    sphero.setColor(color);
+
     // speed = speed * 20;
     // if (speed > MAX_SPEED ) speed = MAX_SPEED;
     speed = MAX_SPEED;
