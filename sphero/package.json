@@ -5,6 +5,6 @@
     "cylon-sphero"  : "*",
     "nodemon"       : "*",
     "lodash"        : "*",
-    "express"       : "3.0.0"
+    "firebase"		: "*"
   }
 }
