@@ -1,32 +1,3 @@
-var express = require('express'),
-    http    = require('http'),
-    path    = require('path');
-
-var app = express();
-
-// all environments
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.cookieParser());
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.session({ secret: "jared's mom" }));
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'views')));
-app.use(express.errorHandler());
-
-//Main Routes
-app.get('/', function(req, res){
-    res.send("hello");
-});
-
-//Start Server
-http.createServer(app).listen(3003, function(){
-    console.log('server started on port 3003');
-});
-
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 var util = require('util');
@@ -44,8 +15,6 @@ var TEAMS = {
   'red' : 0,
   'blue' : 0
 }
-
-
 
 function spheroWorker(my){
           var s = my.sphero,
