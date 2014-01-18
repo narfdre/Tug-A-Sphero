@@ -32,9 +32,9 @@
                 <li ng-repeat="ballot in ballots | orderByPriority">
                     {{ballot.name}} 
                     <div class="ui buttons"> 
-                        <div class="ui button" ng-click="addVote(ballot, 'westCount')">{{ballot.west}}   {{ballot.westCount}} </div> 
+                        <button ng-disabled="disabled['westCount']" class="ui button" ng-click="addVote(ballot, 'westCount')">{{ballot.west}}   {{ballot.westCount}} </button> 
                         <div class="or"></div>
-                        <div class="ui button" ng-click="addVote(ballot, 'eastCount')">{{ballot.east}}   {{ballot.eastCount}} </div>
+                        <button ng-disabled="disabled['eastCount']" class="ui button" ng-click="addVote(ballot, 'eastCount')">{{ballot.east}}   {{ballot.eastCount}} </button>
                     </div>
                     <ul>
                         <li>{{ballot.$id}}</li>
