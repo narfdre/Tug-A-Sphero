@@ -25,16 +25,19 @@
                         <label>Team blue</label>
                         <input type="text" ng-model="ballot.west"/>
                     </div>
-                    <button type="submit">Create</button>
+                    <button class="ui button down" type="submit">Create</button>
                 </fieldset>
             </form>
             <ul>
                 <li ng-repeat="ballot in ballots | orderByPriority">
-                    {{ballot.name}} <span> <b>{{ballot.west}}</b> vs. <b>{{ballot.east}}</b></span>
+                    {{ballot.name}} 
+                    <div class="ui buttons"> 
+                        <div class="ui button" ng-click="addVote(ballot, 'westCount')">{{ballot.west}}   {{ballot.westCount}} </div> 
+                        <div class="or"></div>
+                        <div class="ui button" ng-click="addVote(ballot, 'eastCount')">{{ballot.east}}   {{ballot.eastCount}} </div>
+                    </div>
                     <ul>
                         <li>{{ballot.$id}}</li>
-                        <li>{{ballot.east}} {{ballot.eastCount}} <a ng-click="addVote(ballot, 'eastCount')">+</a> </li>
-                        <li>{{ballot.west}} {{ballot.westCount}} <a ng-click="addVote(ballot, 'westCount')">+</a> </li>
                     </ul>
                 </li>
             </ul>
