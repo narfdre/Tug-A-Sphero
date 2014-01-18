@@ -23,6 +23,7 @@ function BallotController($scope, $firebase, $log){
     
     $scope.addVote = function(ballot, team){
         ballot[team]++;
+        ballot.changed = team;
         $scope.ballots.$save();
     }
 }
