@@ -1,0 +1,10 @@
+{
+  "name": "tug-a-sphero",
+  "dependencies": {
+    "cylon"         : "*",
+    "cylon-sphero"  : "*",
+    "nodemon"       : "*",
+    "lodash"        : "*",
+    "express"       : "3.0.0"
+  }
+}
