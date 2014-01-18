@@ -35,6 +35,7 @@ function roll(data, sphero){
   }else{
 
     color = redCount > blueCount ? 'red' : 'blue'; 
+    dir = redCount > blueCount ? 1 : 181; 
     sphero.setColor(color);
 
     // speed = speed * 20;
