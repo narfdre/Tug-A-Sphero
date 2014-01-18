@@ -4,6 +4,9 @@ var util = require('util');
 var Cylon = require('cylon')
         , MAX_SPEED = 60;
 
+var Firebase = require('firebase');
+var rootRef = new Firebase('https://tug-a-sphero.firebaseio.com/ballots/-JDX8SoPDXn2bFk9KiRN');
+
 
 
 
@@ -11,15 +14,12 @@ var Cylon = require('cylon')
 var util = require('util'),
     _ = require('lodash');
  
-var TEAMS = {
-  'red' : 0,
-  'blue' : 0
-}
 
 function spheroWorker(my){
           var s = my.sphero,
                   redCount = 0, 
-                  blueCount = 0
+                  blueCount = 0,
+                  team = undefined
                   ;
           
 
@@ -27,66 +27,46 @@ function spheroWorker(my){
         s.setColor('green');
         s.setBackLED(100);
 
-        function roll(team){
-                var dir, speed;
-                redCount = TEAMS['red'];
-                blueCount = TEAMS['blue'];
-                if(team == "red"){
-                        dir = 1;
-                        speed = redCount - blueCount;
-                        s.setColor('red');
-                // }else{
-                }else if(team == "blue"){
-                        dir = 181;
-                        speed = blueCount - redCount;
-                        s.setColor('blue');
-                }else{
-                        console.log("Unknown team ", team);
-                        return;
-                }
+        function roll(data){
+          var dir, speed;
+          redCount = data['eastCount'];
+          blueCount = data['westCount'];
+          team = data['changed'];
+          if(team == "eastCount"){
+                  dir = 1;
+                  speed = redCount - blueCount;
+                  s.setColor('red');
+          }else if(team == "westCount"){
+                  dir = 181;
+                  speed = blueCount - redCount;
+                  s.setColor('blue');
+          }else{
+                  console.log("Unknown team ", team);
+                  return;
+          }
 
-                if( redCount == blueCount ){
-                        s.stop();
-                        s.setColor('green');
-                        return;
-                // }else if(redCount > blueCount){
-                }
+          if( redCount == blueCount ){
+                  s.stop();
+                  s.setColor('green');
+                  return;
+          }
 
-                // speed = speed * 20;
-                // if (speed > MAX_SPEED ) speed = MAX_SPEED;
-                speed = 60;
+          // speed = speed * 20;
+          // if (speed > MAX_SPEED ) speed = MAX_SPEED;
+          speed = 60;
 
-                s.roll(speed, dir);
-                console.log("Moving: ", dir);
+          s.roll(speed, dir);
+          console.log("Moving: ", dir);
         }
 
-        function countTeam(item){
-                  if (!item.text) return;
-                 
-                  console.log(item.text);
-                 
-                  var matches = item.text.match(COLORS);
-                  var uniq;
-                  var team;
-                 
-                  if (matches && matches.length){
-                    var uniq = _.uniq(matches, function(team){ return team.toLowerCase(); })
-                    var team = uniq.length && uniq[0];
-                    var count = TEAMS[team];
-                 
-        
-                          console.log('TEAMS', TEAMS);
-        
-                          roll(team);
-                    TEAMS[team] = count + 1;
-                  }
-                 
-        }
-
+        rootRef.on('value', function(data){
+          console.log(data.val());
+          roll(data.val());
+        });
 };
 
 Cylon.robot({
-        connection: { name: 'sphero', adaptor: 'sphero', port: '/dev/cu.Sphero-WGR-AMP-SPP' },
+        connection: { name: 'sphero', adaptor: 'sphero', port: '/dev/tty.Sphero-OYR-AMP-SPP' },
         device: {name: 'sphero', driver: 'sphero'},
         work: spheroWorker
 }).start();
